@@ -19,8 +19,13 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using PeerConnectionClient.Model;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Threading;
 using System.Text.RegularExpressions;
+using Windows.Security.Cryptography.Core;
+using Windows.Storage.Streams;
 using static System.String;
 #if ORTCLIB
 using Org.Ortc;
@@ -76,7 +81,7 @@ namespace PeerConnectionClient.Signalling
         /// Helps to pass WebRTC session signals between client and server.
         /// </summary>
         public Signaller Signaller => _signaller;
-        
+
         /// <summary>
         /// Video codec used in WebRTC session.
         /// </summary>
@@ -107,7 +112,7 @@ namespace PeerConnectionClient.Signalling
         /// <summary>
         /// Media details.
         /// </summary>
-        public Media Media => _media;	
+        public Media Media => _media;
 
         public ObservableCollection<Peer> Peers;
         public Peer Peer;
@@ -185,14 +190,14 @@ namespace PeerConnectionClient.Signalling
         /// </summary>
         public void UpdatePreferredFrameFormat()
         {
-          if (VideoCaptureProfile != null)
-          {
+            if (VideoCaptureProfile != null)
+            {
 #if ORTCLIB
             _media.SetPreferredVideoCaptureFormat(
               (int)VideoCaptureProfile.Width, (int)VideoCaptureProfile.Height, (int)VideoCaptureProfile.FrameRate);
 #else
-            Org.WebRtc.WebRTC.SetPreferredVideoCaptureFormat(
-                          (int)VideoCaptureProfile.Width, (int)VideoCaptureProfile.Height, (int)VideoCaptureProfile.FrameRate);
+                Org.WebRtc.WebRTC.SetPreferredVideoCaptureFormat(
+                              (int)VideoCaptureProfile.Width, (int)VideoCaptureProfile.Height, (int)VideoCaptureProfile.FrameRate);
 #endif
             }
         }
@@ -204,11 +209,11 @@ namespace PeerConnectionClient.Signalling
         private async Task<bool> CreatePeerConnection(CancellationToken cancelationToken)
         {
             Debug.Assert(_peerConnection == null);
-            if(cancelationToken.IsCancellationRequested)
+            if (cancelationToken.IsCancellationRequested)
             {
                 return false;
             }
-            
+
             var config = new RTCConfiguration()
             {
                 BundlePolicy = RTCBundlePolicy.Balanced,
@@ -234,7 +239,7 @@ namespace PeerConnectionClient.Signalling
             _peerConnection.EtwStatsEnabled = _etwStatsEnabled;
             _peerConnection.ConnectionHealthStatsEnabled = _peerConnectionStatsEnabled;
 #endif
-                if (cancelationToken.IsCancellationRequested)
+            if (cancelationToken.IsCancellationRequested)
             {
                 return false;
             }
@@ -308,6 +313,15 @@ namespace PeerConnectionClient.Signalling
 
 #if !ORTCLIB
             Debug.WriteLine("Conductor: Adding local media stream.");
+            var stream = await _media.GetUserMedia(mediaStreamConstraints);
+            var track = stream.GetVideoTracks().FirstOrDefault();
+            var rawSource = Media.CreateMedia().CreateRawVideoSource(track);
+            rawSource.OnRawVideoFrame += RawSourceOnOnRawVideoFrame1;
+
+            Debug.WriteLine("Track ID Sender : " + track.Id);
+            _mediaStream.AddTrack(track);
+
+
             _peerConnection.AddStream(_mediaStream);
 #endif
             OnAddLocalStream?.Invoke(new MediaStreamEvent() { Stream = _mediaStream });
@@ -317,6 +331,12 @@ namespace PeerConnectionClient.Signalling
                 return false;
             }
             return true;
+        }
+
+
+        private void RawSourceOnOnRawVideoFrame1(uint param0, uint param1, byte[] param2, uint param3, byte[] param4, uint param5, byte[] param6, uint param7)
+        {
+            Debug.WriteLine("Byte sent : {0}, {1}, {2},{3}", param2[0], param2[51], param2[120], param2[195]);
         }
 
         /// <summary>
@@ -550,7 +570,7 @@ namespace PeerConnectionClient.Signalling
                         if (type == "offer" || type == "answer" || type == "json")
                         {
                             Debug.Assert(_peerId == -1);
-                            _peerId = peerId;              
+                            _peerId = peerId;
 
                             IEnumerable<Peer> enumerablePeer = Peers.Where(x => x.Id == peerId);
                             Peer = enumerablePeer.First();
@@ -714,7 +734,7 @@ namespace PeerConnectionClient.Signalling
             }
             _signaller.Connect(server, port, GetLocalPeerName());
         }
-       
+
         /// <summary>
         /// Calls to disconnect the user from the server.
         /// </summary>
@@ -945,7 +965,7 @@ namespace PeerConnectionClient.Signalling
         public void ConfigureIceServers(Collection<IceServer> iceServers)
         {
             _iceServers.Clear();
-            foreach(IceServer iceServer in iceServers)
+            foreach (IceServer iceServer in iceServers)
             {
                 //Url format: stun:stun.l.google.com:19302
                 string url = "stun:";
@@ -984,7 +1004,7 @@ namespace PeerConnectionClient.Signalling
         /// </summary>
         public void CancelConnectingToPeer()
         {
-            if(_connectToPeerTask != null)
+            if (_connectToPeerTask != null)
             {
                 Debug.WriteLine("Conductor: Connecting to peer in progress, canceling");
                 _connectToPeerCancelationTokenSource.Cancel();

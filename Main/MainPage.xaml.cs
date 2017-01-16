@@ -12,6 +12,7 @@
 using PeerConnectionClient.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -51,6 +52,7 @@ namespace PeerConnectionClient
             this.DataContext = _mainViewModel;
             _mainViewModel.PeerVideo = PeerVideo;
             _mainViewModel.SelfVideo = SelfVideo;
+            _mainViewModel.TestVideo = TestVideo;
         }
 
         /// <summary>
@@ -89,6 +91,11 @@ namespace PeerConnectionClient
             {
                 _mainViewModel.SelfVideo_MediaFailed(sender, e);
             }
+        }
+
+        private void TestVideo_OnMediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            Debug.WriteLine("TestVideo_OnMediaFailed");
         }
     }
 }

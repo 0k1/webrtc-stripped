@@ -243,13 +243,19 @@
                 Visibility="{Binding ShowLoopbackVideo, Converter={StaticResource BoolToVisConverter}}"
                 RelativePanel.AlignBottomWithPanel="True"
                 RelativePanel.AlignRightWithPanel="True">
-                <Grid>
+                <StackPanel>
                     <MediaElement 
                         Width="200"
                         Height="200"
                         RealTimePlayback="True"
                         Name="SelfVideo"
                         MediaFailed="SelfVideo_MediaFailed"/>
+                    <MediaElement Visibility="Collapsed"
+                        Width="200"
+                        Height="200"
+                        RealTimePlayback="True"
+                        Name="TestVideo"
+                        MediaFailed="TestVideo_OnMediaFailed"/>
                     <Border Background="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="110">
                         <TextBlock Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <Run Text="{Binding SelfWidth}"/>
@@ -259,7 +265,7 @@
                             <Run Text="{Binding SelfVideoFps}"/>
                         </TextBlock>
                     </Border>
-                </Grid>
+                </StackPanel>
             </Border>
             <RelativePanel 
                 Name="SettingsPannel"
