@@ -250,7 +250,7 @@
                         RealTimePlayback="True"
                         Name="SelfVideo"
                         MediaFailed="SelfVideo_MediaFailed"/>
-                    <MediaElement Visibility="Collapsed"
+                    <MediaElement 
                         Width="200"
                         Height="200"
                         RealTimePlayback="True"

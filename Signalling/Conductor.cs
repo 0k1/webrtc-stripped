@@ -313,14 +313,24 @@ namespace PeerConnectionClient.Signalling
 
 #if !ORTCLIB
             Debug.WriteLine("Conductor: Adding local media stream.");
-            var stream = await _media.GetUserMedia(mediaStreamConstraints);
-            var track = stream.GetVideoTracks().FirstOrDefault();
+            var track = _mediaStream.GetVideoTracks().FirstOrDefault();
             var rawSource = Media.CreateMedia().CreateRawVideoSource(track);
             rawSource.OnRawVideoFrame += RawSourceOnOnRawVideoFrame1;
 
-            Debug.WriteLine("Track ID Sender : " + track.Id);
-            _mediaStream.AddTrack(track);
+            var secondary = Media.CreateMedia();
+            if (Media.GetVideoCaptureDevices().Count > 1)
+            {
+                secondary.SelectVideoDevice(Media.GetVideoCaptureDevices()[1]);
+            }
+            var secondStream = await secondary.GetUserMedia(new RTCMediaStreamConstraints { videoEnabled = true, audioEnabled = false });
 
+            var track2 = secondStream.GetVideoTracks().FirstOrDefault();
+
+            Debug.WriteLine("Track ID Sender : " + track.Id);
+            _mediaStream.AddTrack(track2);
+
+            var rawSource2 = Media.CreateMedia().CreateRawVideoSource(track2);
+            rawSource2.OnRawVideoFrame += OnOnRawVideoFrame;
 
             _peerConnection.AddStream(_mediaStream);
 #endif
@@ -333,10 +343,15 @@ namespace PeerConnectionClient.Signalling
             return true;
         }
 
+        private void OnOnRawVideoFrame(uint param0, uint param1, byte[] param2, uint param3, byte[] param4, uint param5, byte[] param6, uint param7)
+        {
+            Debug.WriteLine("Byte sent track2 : {0}, {1}, {2},{3}", param2[0], param2[51], param2[120], param2[195]);
+        }
+
 
         private void RawSourceOnOnRawVideoFrame1(uint param0, uint param1, byte[] param2, uint param3, byte[] param4, uint param5, byte[] param6, uint param7)
         {
-            Debug.WriteLine("Byte sent : {0}, {1}, {2},{3}", param2[0], param2[51], param2[120], param2[195]);
+            Debug.WriteLine("Byte sent track1 : {0}, {1}, {2},{3}", param2[0], param2[51], param2[120], param2[195]);
         }
 
         /// <summary>

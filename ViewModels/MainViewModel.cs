@@ -1106,19 +1106,20 @@ namespace PeerConnectionClient.ViewModels
         private List<byte> contentBytes2;
         private void RawSourceOnOnRawVideoFrame1(uint param0, uint param1, byte[] param2, uint param3, byte[] param4, uint param5, byte[] param6, uint param7)
         {
-            RunOnUiThread(() =>
-            {
-                if (_timer == null)
-                {
-                    StartTimer();
-                }
-                if (status)
-                {
-                    contentBytes.AddRange(param2);
-                    contentBytes.AddRange(param4);
-                    contentBytes.AddRange(param6);
-                }
-            });
+            Debug.WriteLine("Copy {0} {1} {2} {3}", param2[12], param2[20], param2[35], param2[124]);
+            //RunOnUiThread(() =>
+            //{
+            //    if (_timer == null)
+            //    {
+            //        StartTimer();
+            //    }
+            //    if (status)
+            //    {
+            //        contentBytes.AddRange(param2);
+            //        contentBytes.AddRange(param4);
+            //        contentBytes.AddRange(param6);
+            //    }
+            //});
         }
 
         private void StartTimer()
@@ -1149,19 +1150,20 @@ namespace PeerConnectionClient.ViewModels
 
         private void RawSourceOnOnRawVideoFrame(uint param0, uint param1, byte[] param2, uint param3, byte[] param4, uint param5, byte[] param6, uint param7)
         {
-            RunOnUiThread(() =>
-            {
-                if (_timer == null)
-                {
-                    StartTimer();
-                }
-                if (status)
-                {
-                    contentBytes2.AddRange(param2);
-                    contentBytes2.AddRange(param4);
-                    contentBytes2.AddRange(param6);
-                }
-            });
+            Debug.WriteLine("original {0} {1} {2} {3}", param2[12], param2[20], param2[35], param2[124]);
+            //RunOnUiThread(() =>
+            //{
+            //    if (_timer == null)
+            //    {
+            //        return;  StartTimer();
+            //    }
+            //    if (status)
+            //    {
+            //        contentBytes2.AddRange(param2);
+            //        contentBytes2.AddRange(param4);
+            //        contentBytes2.AddRange(param6);
+            //    }
+            //});
 
         }
 
