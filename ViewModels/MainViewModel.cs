@@ -1078,8 +1078,8 @@ namespace PeerConnectionClient.ViewModels
             if (_peerVideoTrack != null)
             {
                 var source = Media.CreateMedia().CreateMediaSource(_peerVideoTrack, "PEER");
-                var rawSource = Media.CreateMedia().CreateRawVideoSource(_peerVideoTrack);
-                rawSource.OnRawVideoFrame += RawSourceOnOnRawVideoFrame;
+                //var rawSource = Media.CreateMedia().CreateRawVideoSource(_peerVideoTrack);
+                //rawSource.OnRawVideoFrame += RawSourceOnOnRawVideoFrame;
                 RunOnUiThread(() =>
                 {
                     PeerVideo.SetMediaStreamSource(source);
@@ -1090,8 +1090,8 @@ namespace PeerConnectionClient.ViewModels
                 Debug.WriteLine("Track ID Receiver : " + mediaVideoTracks[1].Id + " Enabled ? " + mediaVideoTracks[1].Enabled);
                 var source = Media.CreateMedia().CreateMediaSource(mediaVideoTracks[1], "PEER");
 
-                var rawSource = Media.CreateMedia().CreateRawVideoSource(mediaVideoTracks[1]);
-                rawSource.OnRawVideoFrame += RawSourceOnOnRawVideoFrame1;
+                //var rawSource = Media.CreateMedia().CreateRawVideoSource(mediaVideoTracks[1]);
+                //rawSource.OnRawVideoFrame += RawSourceOnOnRawVideoFrame1;
                 RunOnUiThread(() =>
                 {
                     TestVideo.SetMediaStreamSource(source);

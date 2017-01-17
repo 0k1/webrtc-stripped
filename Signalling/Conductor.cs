@@ -314,8 +314,8 @@ namespace PeerConnectionClient.Signalling
 #if !ORTCLIB
             Debug.WriteLine("Conductor: Adding local media stream.");
             var track = _mediaStream.GetVideoTracks().FirstOrDefault();
-            var rawSource = Media.CreateMedia().CreateRawVideoSource(track);
-            rawSource.OnRawVideoFrame += RawSourceOnOnRawVideoFrame1;
+            //var rawSource = Media.CreateMedia().CreateRawVideoSource(track);
+            //rawSource.OnRawVideoFrame += RawSourceOnOnRawVideoFrame1;
 
             var secondary = Media.CreateMedia();
             if (Media.GetVideoCaptureDevices().Count > 1)
@@ -326,11 +326,11 @@ namespace PeerConnectionClient.Signalling
 
             var track2 = secondStream.GetVideoTracks().FirstOrDefault();
 
-            Debug.WriteLine("Track ID Sender : " + track.Id);
+            Debug.WriteLine("Track ID Sender : " + track2.Id);
             _mediaStream.AddTrack(track2);
 
-            var rawSource2 = Media.CreateMedia().CreateRawVideoSource(track2);
-            rawSource2.OnRawVideoFrame += OnOnRawVideoFrame;
+            //var rawSource2 = Media.CreateMedia().CreateRawVideoSource(track2);
+            //rawSource2.OnRawVideoFrame += OnOnRawVideoFrame;
 
             _peerConnection.AddStream(_mediaStream);
 #endif
