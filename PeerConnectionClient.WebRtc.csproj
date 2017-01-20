@@ -111,13 +111,10 @@
     <Compile Include="Signalling\Conductor.cs" />
     <Compile Include="Signalling\Signalling.cs" />
     <Compile Include="Utilities\ActionCommand.cs" />
-    <Compile Include="Utilities\AppPerf.cs" />
     <Compile Include="Utilities\BoolToVisConverter.cs" />
     <Compile Include="Utilities\InvertedBooleanConverter.cs" />
-    <Compile Include="Utilities\NtpService.cs" />
     <Compile Include="Utilities\NullToVisibleConverter.cs" />
     <Compile Include="Utilities\SdpUtils.cs" />
-    <Compile Include="Utilities\ToggleImageConverter.cs" />
     <Compile Include="Utilities\UI\ErrorControl.xaml.cs">
       <DependentUpon>ErrorControl.xaml</DependentUpon>
     </Compile>

@@ -124,53 +124,6 @@ namespace PeerConnectionClient.Signalling
         protected bool AudioEnabled = true;
         protected string SessionId;
 
-        bool _etwStatsEnabled;
-
-        /// <summary>
-        /// Enable/Disable ETW stats used by WebRTCDiagHubTool Visual Studio plugin.
-        /// If the ETW Stats are disabled, no data will be sent to the plugin.
-        /// </summary>
-        public bool ETWStatsEnabled
-        {
-            get
-            {
-                return _etwStatsEnabled;
-            }
-            set
-            {
-                _etwStatsEnabled = value;
-#if !ORTCLIB
-                if (_peerConnection != null)
-                {
-                    _peerConnection.EtwStatsEnabled = value;
-                }
-#endif
-            }
-        }
-
-        bool _peerConnectionStatsEnabled;
-
-        /// <summary>
-        /// Enable/Disable connection health stats.
-        /// Connection health stats are delivered by the OnConnectionHealthStats event. 
-        /// </summary>
-        public bool PeerConnectionStatsEnabled
-        {
-            get
-            {
-                return _peerConnectionStatsEnabled;
-            }
-            set
-            {
-                _peerConnectionStatsEnabled = value;
-#if !ORTCLIB
-                if (_peerConnection != null)
-                {
-                    _peerConnection.ConnectionHealthStatsEnabled = value;
-                }
-#endif
-            }
-        }
 
         public object MediaLock { get; set; } = new object();
 
@@ -235,10 +188,6 @@ namespace PeerConnectionClient.Signalling
             if (_peerConnection == null)
                 throw new NullReferenceException("Peer connection is not created.");
 
-#if !ORTCLIB
-            _peerConnection.EtwStatsEnabled = _etwStatsEnabled;
-            _peerConnection.ConnectionHealthStatsEnabled = _peerConnectionStatsEnabled;
-#endif
             if (cancelationToken.IsCancellationRequested)
             {
                 return false;
@@ -916,42 +865,6 @@ namespace PeerConnectionClient.Signalling
                     }
                 }
                 VideoEnabled = true;
-            }
-        }
-
-        /// <summary>
-        /// Disables the local video stream.
-        /// </summary>
-        public void DisableLocalVideoStream()
-        {
-            lock (MediaLock)
-            {
-                if (_mediaStream != null)
-                {
-                    foreach (MediaVideoTrack videoTrack in _mediaStream.GetVideoTracks())
-                    {
-                        videoTrack.Enabled = false;
-                    }
-                }
-                VideoEnabled = false;
-            }
-        }
-
-        /// <summary>
-        /// Mutes the microphone.
-        /// </summary>
-        public void MuteMicrophone()
-        {
-            lock (MediaLock)
-            {
-                if (_mediaStream != null)
-                {
-                    foreach (MediaAudioTrack audioTrack in _mediaStream.GetAudioTracks())
-                    {
-                        audioTrack.Enabled = false;
-                    }
-                }
-                AudioEnabled = false;
             }
         }
 
