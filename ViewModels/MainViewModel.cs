@@ -9,6 +9,11 @@
 //
 //*********************************************************
 
+using Org.WebRtc;
+using PeerConnectionClient.Model;
+using PeerConnectionClient.MVVM;
+using PeerConnectionClient.Signalling;
+using PeerConnectionClient.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,25 +27,6 @@ using Windows.System.Display;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
-using PeerConnectionClient.Model;
-using PeerConnectionClient.MVVM;
-using PeerConnectionClient.Signalling;
-using PeerConnectionClient.Utilities;
-
-#if ORTCLIB
-using Org.Ortc;
-using Org.Ortc.Adapter;
-using PeerConnectionClient.Ortc;
-using PeerConnectionClient.Ortc.Utilities;
-using CodecInfo = Org.Ortc.RTCRtpCodecCapability;
-using MediaVideoTrack = Org.Ortc.MediaStreamTrack;
-using MediaAudioTrack = Org.Ortc.MediaStreamTrack;
-using FrameCounterHelper= PeerConnectionClient.Ortc.OrtcStatsManager;
-#else
-
-using Org.WebRtc;
-
-#endif
 
 namespace PeerConnectionClient.ViewModels
 {
@@ -1245,7 +1231,6 @@ namespace PeerConnectionClient.ViewModels
         /// </summary>
         private void LoadSettings()
         {
-
             // Default values:
 
             var peerCcServerIp = new ValidableNonEmptyString("10.10.50.158");

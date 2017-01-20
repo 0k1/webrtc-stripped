@@ -115,9 +115,6 @@
     <Compile Include="Utilities\InvertedBooleanConverter.cs" />
     <Compile Include="Utilities\NullToVisibleConverter.cs" />
     <Compile Include="Utilities\SdpUtils.cs" />
-    <Compile Include="Utilities\UI\ErrorControl.xaml.cs">
-      <DependentUpon>ErrorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\ValidableBase.cs" />
     <Compile Include="Utilities\ValidableIntegerString.cs" />
     <Compile Include="Utilities\ValidableNonEmptyString.cs" />
@@ -162,10 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Main\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Utilities\UI\ErrorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
